@@ -414,8 +414,8 @@ extension WifiConfigurable {
             [weak self] deviceId, attributeId, type, hexData in
             DDLogDebug("writeAttribute hubId: \(deviceId) attributeId: \(attributeId) type: \(type) hexData \(hexData)", tag: TAG)
 
-            let data: [UInt8] = Data(hexEncoded: hexData)?.bytes ?? []
-
+            let data: [UInt8] = Data(hexEncoded: hexData)?.bytes.map(Array.init) ?? []
+            
             DDLogDebug("writeAttribute will write \(data)", tag: TAG)
             
             let attributeValue = AttributeValue.rawBytes(data)
