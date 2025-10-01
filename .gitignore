@@ -18,6 +18,9 @@ DerivedData
 *.xcuserstate
 *.xcuserdata
 *.xctimeline
+*.DS_Store
+.bundle/
+vendor/
 
 local_config.mk
 
