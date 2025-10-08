@@ -6,6 +6,7 @@
 import CocoaLumberjack
 import HTTPStatusCodes
 import CryptoSwift
+import UIKit
 
 public extension HTTPStatusCode {
     
@@ -304,6 +305,8 @@ public extension Timer {
     
 }
 
+// MARK: - String Extensions
+
 extension String {
     
     var intValue: Int? {
@@ -311,6 +314,10 @@ extension String {
             return Int(strtoull(self, nil, 16))
         }
         return Int(self)
+    }
+    
+    var trimNullChars: String {
+        return self.trimmingCharacters(in: CharacterSet(charactersIn: "\0"))
     }
     
 }
