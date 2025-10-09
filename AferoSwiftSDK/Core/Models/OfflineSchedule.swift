@@ -182,6 +182,16 @@ extension OfflineSchedule {
         return attributeIdEventMap.filter { $0.value == event }.first?.key
     }
     
+    /// Get an event at the given index (as per the collator)
+    public func event(_ index: Int) -> OfflineSchedule.ScheduleEvent {
+        return collatedEvents[index]
+    }
+    
+    /// Get an event for the given attributeId, if present
+    public func eventForAttributeID(_ attributeId: Int) -> OfflineSchedule.ScheduleEvent? {
+        return attributeIdEventMap[attributeId]
+    }
+    
     public func scheduleEvent(_ index: Int) -> OfflineSchedule.ScheduleEvent {
         return event(index)
     }
@@ -616,7 +626,7 @@ open class OfflineSchedule: NSObject {
     /// Canonical ScheduleEvent storage
     fileprivate var attributeIdEventMap: [Int: ScheduleEvent] = [:]
     
-    /// An array of AttributeIDs to be used as oflfine schedule events
+    /// An array of AttributeIDs to be used as oflfline schedule events
     lazy fileprivate(set) var attributeIds: [Int]! = {
 
         guard let deviceModel = self.storage else { return [] }
@@ -692,11 +702,6 @@ open class OfflineSchedule: NSObject {
     /// for `setEvent(nil, forAttributeId: attributeId)`.
     func removeEvent(_ attributeId: Int) {
         setEvent(event: nil, forAttributeId: attributeId)
-    }
-
-    /// Get an event at the given index (as per the collator)
-    open func event(_ index: Int) -> OfflineSchedule.ScheduleEvent {
-        return collatedEvents[index]
     }
     
     // MARK: - Public Interface
@@ -2178,3 +2183,4 @@ extension DeviceModelable {
         
     }
 }
+
