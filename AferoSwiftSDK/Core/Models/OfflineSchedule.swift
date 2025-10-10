@@ -781,7 +781,13 @@ open class OfflineSchedule: NSObject {
             get { return timeSpecification.repeats }
             set { timeSpecification.repeats = newValue }
         }
-        
+
+        /// Accessor for the `enabled` property of the `timeSpecification`
+        public var enabled: Bool {
+            get { return timeSpecification.enabled }
+            set { timeSpecification.enabled = newValue }
+        }
+
         /// Accessor for the `timeSpecification`'s local-timezone day of week, starting with Sunday == 1, ending with Saturday == 7
         @available(*, deprecated, message: "Use daysOfWeek instead.")
         public var dayOfWeek: TimeSpecification.DayOfWeek {
@@ -938,7 +944,17 @@ open class OfflineSchedule: NSObject {
                 }
             }
 
-            
+            /// Whether this schedule event is enabled. When disabled bit is LOW (not set), the schedule is enabled.
+            /// When disabled bit is HIGH (set), the schedule is disabled.
+            public var enabled: Bool {
+                get { return !flags.contains(.disabled) }
+                set {
+                    if newValue { flags.remove(.disabled) }
+                    else { flags.insert(.disabled) }
+                }
+            }
+
+
             public init(daysOfWeek: Set<DayOfWeek> = [], hour: Hour = 0, minute: Minute = 0, flags: Flags = [.usesDeviceTimeZone], useCompactDayRepresentation: Bool = false ) {
                 self._daysOfWeek = daysOfWeek
                 if (useCompactDayRepresentation || daysOfWeek.count > 1) {
@@ -1420,6 +1436,9 @@ extension OfflineSchedule.ScheduleEvent.TimeSpecification {
             if contains(.repeats) {
                 lflags.append("Repeats(\(Flags.repeats.rawValue))")
             }
+            if contains(.disabled) {
+                lflags.append("Disabled(\(Flags.disabled.rawValue))")
+            }
             return "<OfflineSchedule.ScheduleEvent.TimeSpecification.Flags> \(rawValue) [\(lflags.joined(separator: ", "))]"
         }
         
@@ -1434,7 +1453,11 @@ extension OfflineSchedule.ScheduleEvent.TimeSpecification {
         /// The schedule is in the timezone associated with the device, rather
         /// than UTC.
         public static var usesDeviceTimeZone: Flags { return self.init(bitIndex: 1) }
-        
+
+        /// The schedule is disabled. When this bit is HIGH, the schedule is disabled.
+        /// When this bit is LOW, the schedule is enabled.
+        public static var disabled: Flags { return self.init(bitIndex: 2) }
+
         // Yes, this is what a bitfield looks like in Swift :(
         
         public typealias RawValue = UInt8
